@@ -9,7 +9,7 @@ const chokidar = require('chokidar');
 const os = require('os');
 const querystring = require('querystring');
 const fs = require("fs");
-const logPrefix = '[Dianxin Dev Deploy]';
+const logPrefix = "\033[32m[Watcher Deploy]\033[0m";
 const _request = (options, callback) => {
     var headers = options.headers ? options.headers : {};
     headers['Content-Type'] = headers['Content-Type'] ? headers['Content-Type'] : 'application/x-www-form-urlencoded';
@@ -59,8 +59,8 @@ const _request = (options, callback) => {
 const request = (path,content, signal ='')=>{
   _request({
       protocol: 'http:',
-      host: 'dx.berry.ifaceparty.com',
-      port: 6012,
+      host: 'ifaceparty.com',
+      port: 6666,
       method: 'POST',
       path: '/',
       data: {

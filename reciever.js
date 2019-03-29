@@ -5,7 +5,7 @@ const http = require("http");
 const querystring = require("querystring");
 const fs = require("fs");
 
-const logPrefix = '[Dianxin Dev Deploy]';
+const logPrefix = '\033[32m[Watcher Deploy]\033[0m';
 http.createServer(function(req, res){
     res.writeHead(200, { 'Content-Type': 'text-plain' });
     let body = "";
