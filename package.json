@@ -1,0 +1,22 @@
+{
+  "name": "dx-php-dev-deploy",
+  "version": "1.0.0",
+  "description": "auto deploy changed file to remote dev server",
+  "main": "watcher.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "start": "node watcher.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://e.coding.net/ifaceparty/dx-php.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chokidar": "^2.1.5"
+  }
+}
