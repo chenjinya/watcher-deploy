@@ -10,6 +10,9 @@ const os = require('os');
 const querystring = require('querystring');
 const fs = require("fs");
 const logPrefix = "\033[32m[Watcher Deploy]\033[0m";
+const _ = process.argv.splice(2);
+
+console.log('传入参数：', _);
 const _request = (options, callback) => {
     var headers = options.headers ? options.headers : {};
     headers['Content-Type'] = headers['Content-Type'] ? headers['Content-Type'] : 'application/x-www-form-urlencoded';
@@ -69,21 +72,23 @@ const request = (path, content, signal = '') => {
             signal: signal,
         }
     }, (res) => {
-        console.log(logPrefix,"deploy", path, res);
+        console.log(logPrefix, "deploy", path, res);
     })
 }
 const watcher = chokidar.watch(".", {
     ignored: /^(vendor|node_modules|\.git|ffmpeg|vagrant|runtime|\.idea|\.settings|assets|commands|controller|web|views|widgets)\/*/,
-}).on('add', path => {
-    let content = fs.readFileSync(path, {encoding: 'utf8'});
-    request(path, content, 'add');
 })
 watcher
     .on('change', path => {
         let content = fs.readFileSync(path, {encoding: 'utf8'});
-        // console.log(logPrefix, "deploy", path, res);
         request(path, content, 'change');
 
+    })
+    .on('add', path => {
+        if (-1 === _.indexOf("--half")) {
+            let content = fs.readFileSync(path, {encoding: 'utf8'});
+            request(path, content, 'add');
+        }
     })
 
 console.log(logPrefix, "watcher start");
