@@ -19,9 +19,18 @@ http.createServer(function(req, res){
             console.log(logPrefix, "signal", body.path, body.content, body.signal);
             res.end('signal ok\n');
         } else {
+            let dir = body.path.substr(0, body.path.lastIndexOf("/"));
             console.log(logPrefix, "deploy", body.path, body.signal);
+            try {
+                fs.statSync(dir);
+            } catch (e) {
+                fs.mkdirSync(dir, {
+                    recursive: true,
+                })
+            }
             fs.writeFile(body.path, body.content);
             res.end('deploy ok\n');
+
         }
     });
 
