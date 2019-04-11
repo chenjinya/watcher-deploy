@@ -12,7 +12,11 @@ const fs = require("fs");
 const logPrefix = "\033[32m[Watcher Deploy]\033[0m";
 const _ = process.argv.splice(2);
 
-console.log('传入参数：', _);
+let filesMap = {};
+let sendingTimeout = null;
+let deployTimes = 0;
+let filesTotal = 0;
+let deployPerformance = Date.now();
 const _request = (options, callback) => {
     var headers = options.headers ? options.headers : {};
     headers['Content-Type'] = headers['Content-Type'] ? headers['Content-Type'] : 'application/x-www-form-urlencoded';
@@ -53,43 +57,88 @@ const _request = (options, callback) => {
         request.write(post_data);
     }
     request.on('error', (e) => {
-        console.error(`problem with request: ${e.message}`);
+        console.error(logPrefix, `problem with request: ${e.message}`);
         callback && callback(false);
     });
     request.end();
     return true;
 };
-const request = (path, content, signal = '') => {
+const request = (communication) => {
     _request({
         protocol: 'http:',
-        host: 'ifaceparty.com',
+        host: 'faceparty.com',
         port: 6012,
         method: 'POST',
+        headers: {
+            'Content-Type': 'application/json;charset=utf-8'
+        },
         path: '/',
-        data: {
-            path: path,
-            content: content,
-            signal: signal,
-        }
+        data: communication
     }, (res) => {
-        console.log(logPrefix, "deploy", path, res);
+        if(res !== 'ok') {
+            console.warn(logPrefix, res);
+        }
     })
 }
+let bounceRequestCache = [];
+const bounceRequest = (data = null) => {
+    if(data) {
+        bounceRequestCache.push({
+            type: data.type,
+            path: data.path,
+            content: fs.readFileSync(data.path, {encoding: 'utf8'}),
+        });
+    }
+    if(bounceRequestCache.length > 0) {
+        if(sendingTimeout) clearTimeout(sendingTimeout);
+        sendingTimeout = setTimeout(()=>{
+
+            let _cache = bounceRequestCache.splice(0, 10);
+
+            request({
+                data: _cache,
+                files_total: filesTotal,
+                deploy_times: deployTimes
+            });
+            deployTimes += _cache.length;
+            if(bounceRequestCache.length > 0) {
+                bounceRequest();
+            }
+            if(_cache.length > 0 && _cache[0].type === "file.add") {
+                console.log(logPrefix, `[${deployTimes} / ${filesTotal}]`+' file deployed , cost: ' + (Date.now() - deployPerformance) + 'ms');
+            }
+        }, 100);
+    }
+
+
+}
 const watcher = chokidar.watch(".", {
-    ignored: /^(vendor|node_modules|\.git|ffmpeg|vagrant|runtime|\.idea|\.settings|assets|commands|controller|web|views|widgets)\/*/,
-})
+    ignored: /^(vendor|node_modules|\.git|\.idea|\.settings)\/*/,
+});
+
 watcher
     .on('change', path => {
-        let content = fs.readFileSync(path, {encoding: 'utf8'});
-        request(path, content, 'change');
-
+        if(!filesMap[path]) filesMap[path] = 0;
+        filesMap[path] ++;
+        bounceRequest({
+            path,type: 'file.change'
+        })
+        console.log(logPrefix, `📊 File ${path}, deploy times  ${filesMap[path]}`)
     })
     .on('add', path => {
         if (-1 === _.indexOf("--half")) {
-            let content = fs.readFileSync(path, {encoding: 'utf8'});
-            request(path, content, 'add');
+            filesMap[path] = 0;
+            filesTotal ++;
+            bounceRequest({
+                path,type: 'file.add'
+            })
         }
     })
 
-console.log(logPrefix, "watcher start");
-request("__watcher_start", " from " + os.hostname(), 'connect');
+console.log(logPrefix, "watcher start 🎉🎉🎉");
+request({
+    data: {
+        signal: 'watcher.start',
+        content: os.hostname()
+    }
+});
