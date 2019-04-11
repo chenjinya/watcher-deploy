@@ -25,7 +25,7 @@ const _request = (options, callback) => {
     let post_data = '';
     if (options.data) {
         options.method = 'POST';
-        if (headers['Content-Type'] == 'application/json;charset=utf-8') {
+        if (headers['Content-Type'].indexOf('application/json') !== -1) {
             post_data = JSON.stringify(options.data);
         } else {
             post_data = querystring.stringify(options.data);
@@ -70,7 +70,7 @@ const request = (communication) => {
         port: 6012,
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json;charset=utf-8'
+            'Content-Type': 'application/json'
         },
         path: '/',
         data: communication
@@ -86,7 +86,7 @@ const bounceRequest = (data = null) => {
         bounceRequestCache.push({
             type: data.type,
             path: data.path,
-            content: fs.readFileSync(data.path, {encoding: 'utf8'}),
+            content: fs.readFileSync(data.path).toString('base64') ,
         });
     }
     if(bounceRequestCache.length > 0) {
@@ -113,7 +113,7 @@ const bounceRequest = (data = null) => {
 
 }
 const watcher = chokidar.watch(".", {
-    ignored: /^(vendor|node_modules|\.git|\.idea|\.settings)\/*/,
+    ignored: /^(node_modules|\.git|\.idea|\.settings)\/*/,
 });
 
 watcher
