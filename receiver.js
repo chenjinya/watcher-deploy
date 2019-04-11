@@ -4,8 +4,22 @@
 const http = require("http");
 const querystring = require("querystring");
 const fs = require("fs");
+const path = require("path");
 
 const logPrefix = '\033[32m[Watcher Deploy]\033[0m';
+
+const mkdir = function(dir){
+    try {
+        fs.statSync(dir);
+        return true;
+    } catch (e) {
+        if (mkdir(path.dirname(dir))) {
+            fs.mkdirSync(dir);
+            return true;
+        }
+    }
+};
+
 http.createServer(function(req, res){
     res.writeHead(200, { 'Content-Type': 'text-plain' });
     let rawPostData = "";
@@ -25,13 +39,7 @@ http.createServer(function(req, res){
                 let dir = block.path.substr(0, block.path.lastIndexOf("/"));
                 let log = ` deploy ${block.path} `;
                 if(dir) {
-                    try {
-                        fs.statSync(dir);
-                    } catch (e) {
-                        fs.mkdirSync(dir, {
-                            recursive: true,
-                        })
-                    }
+                    mkdir(dir)
                 }
                 try {
                     fs.writeFile(block.path, block.content);
