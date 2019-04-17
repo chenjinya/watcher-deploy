@@ -1,7 +1,7 @@
 {
-  "name": "dx-php-dev-deploy",
+  "name": "watcher-deploy",
   "version": "1.0.0",
-  "description": "auto deploy changed file to remote dev server",
+  "description": "auto deploy changed file to remote  server",
   "main": "watcher.js",
   "directories": {
     "test": "tests"
@@ -15,10 +15,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://e.coding.net/ifaceparty/dx-php.git"
+    "url": "https://github.com/chenjinya/watcher-deploy.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "jinyachen@gmail.com",
+  "license": "MIT",
   "dependencies": {
     "chokidar": "^2.1.5"
   }
