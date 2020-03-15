@@ -1,6 +1,6 @@
 module.exports =  {
-    host: 'target.domain',// receive side domain
-    port: 'target.port',// receive side port
-    watch_path: 'watch.path',// work side path
-    target_path: 'target.path',// receive side path
+    host: 'remote.domain',// receive side domain
+    port: 'remote.port',// receive side port
+    watch_path: 'relative.workspace.path',// work side path
+    target_path: 'remote.file.path',// receive side path
 }

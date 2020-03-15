@@ -11,7 +11,8 @@ const querystring = require('querystring');
 const fs = require("fs");
 const logPrefix = "\033[32m[Watcher Deploy]\033[0m";
 const _ = process.argv.splice(2);
-const conf = require("../config")
+let conf = require("../.config")
+conf = conf ? conf : require("../config")
 
 let filesMap = {};
 let sendingTimeout = null;
@@ -84,9 +85,10 @@ const request = (communication) => {
 let bounceRequestCache = [];
 const bounceRequest = (data = null) => {
     if(data) {
+        let relativePath = data.path.replace(conf.watch_path, '')
         bounceRequestCache.push({
             type: data.type,
-            path: data.path,
+            path: relativePath,
             content: fs.readFileSync(data.path).toString('base64') ,
         });
     }
@@ -114,7 +116,7 @@ const bounceRequest = (data = null) => {
 
 }
 const watcher = chokidar.watch(conf.watch_path, {
-    ignored: /^(node_modules|\.git|\.idea|\.settings)\/*/,
+    ignored: /^(watcher-deploy|node_modules|\.git|\.idea|\.settings)\/*/,
 });
 
 watcher
@@ -124,7 +126,8 @@ watcher
         bounceRequest({
             path,type: 'file.change'
         })
-        console.log(logPrefix, `📊 File ${path}, deploy times  ${filesMap[path]}`)
+        let relativePath = path.replace(conf.watch_path, '')
+        console.log(logPrefix, `📊 File ${relativePath}, deploy times  ${filesMap[path]}`)
     })
     .on('add', path => {
         if (-1 === _.indexOf("--half")) {

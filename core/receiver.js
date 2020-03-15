@@ -5,7 +5,9 @@ const http = require("http");
 const querystring = require("querystring");
 const fs = require("fs");
 const path = require("path");
-const conf = require("../config");
+let conf = require("../.config");
+conf = conf ? conf : require("../config");
+
 const logPrefix = '\033[32m[Watcher Deploy]\033[0m';
 
 const mkdir = function(dir){
@@ -42,8 +44,9 @@ http.createServer(function(req, res){
                     mkdir(dir)
                 }
                 try {
-                    fs.writeFile(block.path, (new Buffer(block.content, 'base64')));
-                    console.log(logPrefix, block.type === 'file.add' ? ` [${+body.deploy_times + (+it+1)} / ${body.files_total}]` : '', `${log} ✅`);
+                    fs.writeFile(block.path, (new Buffer(block.content, 'base64')), () => {
+                        console.log(logPrefix, block.type === 'file.add' ? ` [${+body.deploy_times + (+it+1)} / ${body.files_total}]` : '', `${log} ✅`);
+                    });
                 } catch(e) {
                     console.warn(logPrefix,`${log} ❌`, e);
                 }
