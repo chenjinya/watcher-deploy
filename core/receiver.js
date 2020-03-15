@@ -49,7 +49,7 @@ http.createServer(function(req, res){
                     mkdir(dir)
                 }
                 try {
-                    fs.writeFile(conf.target_path + block.path, (new Buffer(block.content, 'base64')), () => {
+                    fs.writeFile(conf.target_path + block.path, (new Buffer.alloc(block.content, 'base64')), () => {
                         console.log(logPrefix, block.type === 'file.add' ? ` [${+body.deploy_times + (+it+1)} / ${body.files_total}]` : '', `${log} ✅`);
                     });
                 } catch(e) {
