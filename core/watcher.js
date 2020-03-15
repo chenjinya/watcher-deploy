@@ -72,7 +72,8 @@ const request = (communication) => {
         port: conf.port,
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Password': conf.pass
         },
         path: conf.target_path,
         data: communication
@@ -101,7 +102,7 @@ const bounceRequest = (data = null) => {
             request({
                 data: _cache,
                 files_total: filesTotal,
-                deploy_times: deployTimes
+                deploy_times: deployTimes,
             });
             deployTimes += _cache.length;
             if(bounceRequestCache.length > 0) {

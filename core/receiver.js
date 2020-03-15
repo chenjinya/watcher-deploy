@@ -23,6 +23,11 @@ const mkdir = function(dir){
 };
 
 http.createServer(function(req, res){
+    if(req.headers['password'] !== conf.pass){
+        console.error(logPrefix, `Auth Error: header password is '${req.headers['Password']}', conf.pass is '${conf.pass}' `);
+        res.writeHead(401, { 'Content-Type': 'text-plain' });
+        return;
+    }
     res.writeHead(200, { 'Content-Type': 'text-plain' });
     let rawPostData = "";
     req.on('data', function (chunk) {
