@@ -8,9 +8,9 @@
   },
   "scripts": {
     "start": "node ./core/receiver.js",
-    "watch": "node ./core/watcher.js",
-    "watch-hot": "node ./core/watcher.js --half",
-    "receive": "node ./core/receiver.js",
+    "w": "node ./core/watcher.js",
+    "a": "node ./core/watcher.js --half",
+    "r": "node ./core/receiver.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
