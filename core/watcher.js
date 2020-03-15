@@ -116,7 +116,7 @@ const bounceRequest = (data = null) => {
 
 }
 const watcher = chokidar.watch(conf.watch_path, {
-    ignored: /^(watcher-deploy|node_modules|\.git|\.idea|\.settings)\/*/,
+    ignored: /(watcher-deploy|node_modules|\.git|\.idea|\.settings)\/*/,
 });
 
 watcher
