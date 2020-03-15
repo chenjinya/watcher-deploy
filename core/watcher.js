@@ -73,7 +73,7 @@ const request = (communication) => {
         headers: {
             'Content-Type': 'application/json'
         },
-        path: conf.path,
+        path: conf.target_path,
         data: communication
     }, (res) => {
         if(res !== 'ok') {
@@ -113,7 +113,7 @@ const bounceRequest = (data = null) => {
 
 
 }
-const watcher = chokidar.watch(".", {
+const watcher = chokidar.watch(conf.watch_path, {
     ignored: /^(node_modules|\.git|\.idea|\.settings)\/*/,
 });
 
