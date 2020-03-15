@@ -5,7 +5,7 @@ const http = require("http");
 const querystring = require("querystring");
 const fs = require("fs");
 const path = require("path");
-
+const conf = require("../config");
 const logPrefix = '\033[32m[Watcher Deploy]\033[0m';
 
 const mkdir = function(dir){
@@ -53,7 +53,7 @@ http.createServer(function(req, res){
 
     });
 
-}).listen(6012);
+}).listen(conf.port);
 
-console.log(logPrefix, "receiver  is start 🎉🎉🎉, port: 6012");
+console.log(logPrefix, "receiver  is start 🎉🎉🎉, port: ", conf.port);
 

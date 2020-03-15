@@ -7,10 +7,10 @@
     "test": "tests"
   },
   "scripts": {
-    "start": "node receiver.js",
-    "watch": "node watcher.js",
-    "hot-watch": "node watcher.js --half",
-    "receive": "node receiver.js",
+    "start": "node ./core/receiver.js",
+    "watch": "node ./core/watcher.js",
+    "hot-watch": "node ./core/watcher.js --half",
+    "receive": "node ./core/receiver.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

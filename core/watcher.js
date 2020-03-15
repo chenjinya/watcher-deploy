@@ -11,6 +11,7 @@ const querystring = require('querystring');
 const fs = require("fs");
 const logPrefix = "\033[32m[Watcher Deploy]\033[0m";
 const _ = process.argv.splice(2);
+const conf = require("../config")
 
 let filesMap = {};
 let sendingTimeout = null;
@@ -66,13 +67,13 @@ const _request = (options, callback) => {
 const request = (communication) => {
     _request({
         protocol: 'http:',
-        host: 'faceparty.com',
-        port: 6012,
+        host: conf.host,
+        port: conf.port,
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        path: '/',
+        path: conf.path,
         data: communication
     }, (res) => {
         if(res !== 'ok') {
