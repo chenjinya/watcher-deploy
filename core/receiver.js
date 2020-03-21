@@ -47,7 +47,7 @@ http.createServer(function(req, res){
                 let dir = block.path.substr(0, block.path.lastIndexOf("/"));
                 let log = ` deploy ${block.path} `;
                 if(dir) {
-                    mkdir(dir)
+                    mkdir(conf.target_path + dir)
                 }
                 try {
                     fs.writeFile(conf.target_path + block.path, (new Buffer.alloc(block.content.length, block.content, 'base64')), () => {
