@@ -50,11 +50,9 @@ http.createServer(function(req, res){
                     mkdir(conf.target_path + dir)
                 }
                 try {
-                    fs.unlink(conf.target_path + block.path, () => {
-                        fs.writeFile(conf.target_path + block.path, (new Buffer.alloc(block.content.length, block.content, 'base64')), () => {
-                            console.log(logPrefix, block.type === 'file.add' ? ` [${+body.deploy_times + (+it+1)} / ${body.files_total}]` : '', `${log} ✅`);
-                        });
-                    })
+                    fs.writeFile(conf.target_path + block.path, (new Buffer.from(block.content, 'base64')).toString(), () => {
+                        console.log(logPrefix, block.type === 'file.add' ? ` [${+body.deploy_times + (+it+1)} / ${body.files_total}]` : '', `${log} ✅`);
+                    });
                    
                 } catch(e) {
                     console.warn(logPrefix,`${log} ❌`, e);
