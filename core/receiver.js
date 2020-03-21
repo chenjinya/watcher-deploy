@@ -17,7 +17,7 @@ const mkdir = function(dir){
     } catch (e) {
         if (mkdir(path.dirname(dir))) {
             fs.mkdirSync(dir);
-            console.warn(logPrefix,`make dir${dir} ❌`, e);
+            console.log(logPrefix,`make dir: ${dir} ✅`);
             return true;
         }
     }
