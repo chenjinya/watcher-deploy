@@ -50,7 +50,8 @@ http.createServer(function(req, res){
                     mkdir(conf.target_path + dir)
                 }
                 try {
-                    fs.writeFile(conf.target_path + block.path, (new Buffer.from(block.content, 'base64')).toString(), () => {
+                    const buffer = block.path.match(/\.(gif|jpg|jpeg|png|bmp|swf)/) ? new Buffer.from(block.content, 'base64') : (new Buffer.from(block.content, 'base64')).toString()
+                    fs.writeFile(conf.target_path + block.path, buffer, () => {
                         console.log(logPrefix, block.type === 'file.add' ? ` [${+body.deploy_times + (+it+1)} / ${body.files_total}]` : '', `${log} ✅`);
                     });
                    
